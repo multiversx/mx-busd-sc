@@ -4,26 +4,33 @@
         {
             "step": "setState",
             "accounts": {
-                "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000001234": {
+                "``busd_owner____________________s1": {
                     "nonce": "0",
-                    "balance": "0xe8d4a51000",
+                    "balance": "100,000,000,000",
                     "storage": {},
                     "code": ""
                 }
-            }
+            },
+            "newAddresses": [
+                {
+                    "creatorAddress": "``busd_owner____________________s1",
+                    "creatorNonce": "0",
+                    "newAddress": "``new_busd_contract_____________s1"
+                }
+            ]
         },
         {
             "step": "tx",
             "txId": "1",
             "comment": "deploy contract",
             "tx": {
-                "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000001234",
+                "from": "``busd_owner____________________s1",
                 "to": "",
                 "value": "0",
                 "function": "",
                 "contractCode": "file:../../busd.wasm",
                 "arguments": [],
-                "gasLimit": "0x100000",
+                "gasLimit": "100,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -35,18 +42,39 @@
             }
         },
         {
+            "step": "checkState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "1",
+                    "balance": "99,999,900,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``new_busd_contract_____________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "true",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1"
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        },
+        {
             "step": "tx",
             "txId": "2",
             "tx": {
-                "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000001234",
-                "to": "0x0000000000000000000011111111a94f5374fce5edbc8e2a8697c15331001234",
+                "from": "``busd_owner____________________s1",
+                "to": "``new_busd_contract_____________s1",
                 "value": "0",
                 "function": "balanceOf",
                 "contractCode": "",
                 "arguments": [
-                    "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000001234"
+                    "``busd_owner____________________s1"
                 ],
-                "gasLimit": "0x100000",
+                "gasLimit": "100,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -55,27 +83,6 @@
                 "logs": [],
                 "gas": "*",
                 "refund": "*"
-            }
-        },
-        {
-            "step": "checkState",
-            "accounts": {
-                "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000001234": {
-                    "nonce": "2",
-                    "balance": "0xe8d4851000",
-                    "storage": {},
-                    "code": ""
-                },
-                "0x0000000000000000000011111111a94f5374fce5edbc8e2a8697c15331001234": {
-                    "nonce": "0",
-                    "balance": "0",
-                    "storage": {
-                        "0x0300000000000000000000000000000000000000000000000000000000000000": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000001234",
-                        "0x0500000000000000000000000000000000000000000000000000000000000000": "true",
-                        "0x0800000000000000000000000000000000000000000000000000000000000000": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b000000000000000000001234"
-                    },
-                    "code": "file:../../busd.wasm"
-                }
             }
         }
     ]
