@@ -57,7 +57,7 @@ pub trait BUSDCoin {
 
     #[private]
     fn _perform_transfer(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {
-        if self._is_paused() {
+        if self.isPaused() {
             return Err("paused");
         }
 
@@ -130,7 +130,7 @@ pub trait BUSDCoin {
     /// * `amount` the amount of tokens to be transferred.
     /// 
     fn transferFrom(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {
-        if self._is_paused() {
+        if self.isPaused() {
             return Err("paused");
         }
         
@@ -162,7 +162,7 @@ pub trait BUSDCoin {
     /// * `amount` The amount of tokens to be spent.
     /// 
     fn approve(&self, spender: Address, amount: BigUint) -> Result<(), &str> {
-        if self._is_paused() {
+        if self.isPaused() {
             return Err("paused");
         }
 
@@ -320,20 +320,30 @@ pub trait BUSDCoin {
 
     // PAUSABILITY FUNCTIONALITY
 
-    #[private]
-    fn _is_paused(&self) -> bool {
+    #[view]
+    fn isPaused(&self) -> bool {
         self.storage_load_len(&PAUSED_KEY.into()) > 0
     }
 
     /// Called by the owner to pause, triggers stopped state
     fn pause(&self) -> Result<(), &str> {
+        if self.isPaused() {
+            return Err("already paused")
+        }
         self.storage_store_i64(&PAUSED_KEY.into(), 1);
+
+        self.pause_event(());
         Ok(())
     }
 
     /// Called by the owner to unpause, returns to normal state
     fn unpause(&self) -> Result<(), &str> {
+        if !self.isPaused() {
+            return Err("already unpaused")
+        }
         self.storage_store_i64(&PAUSED_KEY.into(), 0);
+
+        self.unpause_event(());
         Ok(())
     }
 

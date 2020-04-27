@@ -1,0 +1,207 @@
+{
+    "name": "create",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                }
+            },
+            "newAddresses": [
+                {
+                    "creatorAddress": "``busd_owner____________________s1",
+                    "creatorNonce": "0",
+                    "newAddress": "``new_busd_contract_____________s1"
+                }
+            ]
+        },
+        {
+            "step": "scDeploy",
+            "txId": "1",
+            "comment": "deploy contract",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "",
+                "value": "0",
+                "function": "",
+                "contractCode": "file:../../busd.wasm",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "1",
+                    "balance": "*",
+                    "storage": {},
+                    "code": ""
+                },
+                "``new_busd_contract_____________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "true",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1"
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2",
+            "comment": "cannot pause, already paused",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "pause",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "already paused",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "3",
+            "comment": "unpause",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "unpause",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``new_busd_contract_____________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000007",
+                        "topics": [],
+                        "data": ""
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "*",
+                    "balance": "*",
+                    "storage": {},
+                    "code": ""
+                },
+                "``new_busd_contract_____________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "false",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1"
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "unpause",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "already unpaused",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "5",
+            "comment": "pause",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "pause",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``new_busd_contract_____________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000006",
+                        "topics": [],
+                        "data": ""
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "checkState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "*",
+                    "balance": "*",
+                    "storage": {},
+                    "code": ""
+                },
+                "``new_busd_contract_____________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "true",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1"
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        }
+    ]
+}

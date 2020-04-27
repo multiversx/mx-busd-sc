@@ -1,0 +1,330 @@
+{
+    "name": "create",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_1______________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_2______________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``busd_contract_________________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "false",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+
+                        "keccak256:1|``holder_1______________________s1": "500"
+                        
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "1",
+            "comment": "unpaused, transfer ok",
+            "tx": {
+                "from": "``holder_1______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transfer",
+                "arguments": [
+                    "``holder_2______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "``holder_1______________________s1",
+                            "``holder_2______________________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2",
+            "comment": "unpaused, allowance ok",
+            "tx": {
+                "from": "``holder_2______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_1______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000002",
+                        "topics": [
+                            "``holder_2______________________s1",
+                            "``holder_1______________________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "3",
+            "comment": "pause",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "pause",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": "*",
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4",
+            "comment": "paused, no transfer",
+            "tx": {
+                "from": "``holder_1______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transfer",
+                "arguments": [
+                    "``holder_2______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "paused",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "5",
+            "comment": "paused, no allowance",
+            "tx": {
+                "from": "``holder_1______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_2______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "paused",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "6",
+            "comment": "paused, no transferFrom",
+            "tx": {
+                "from": "``holder_1______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transferFrom",
+                "arguments": [
+                    "``holder_2______________________s1",
+                    "``holder_1______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "paused",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "7",
+            "comment": "pause",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "unpause",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": "*",
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "8",
+            "comment": "unpaused, transfer ok again",
+            "tx": {
+                "from": "``holder_1______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transfer",
+                "arguments": [
+                    "``holder_2______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "``holder_1______________________s1",
+                            "``holder_2______________________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "9",
+            "comment": "unpaused, allowance ok again",
+            "tx": {
+                "from": "``holder_2______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_1______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000002",
+                        "topics": [
+                            "``holder_2______________________s1",
+                            "``holder_1______________________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "10",
+            "comment": "unpaused, transferFrom ok now",
+            "tx": {
+                "from": "``holder_1______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transferFrom",
+                "arguments": [
+                    "``holder_2______________________s1",
+                    "``holder_1______________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "``holder_2______________________s1",
+                            "``holder_1______________________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}
