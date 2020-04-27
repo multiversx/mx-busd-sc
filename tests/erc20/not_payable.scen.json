@@ -22,14 +22,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "1",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0x01",
                 "function": "totalSupply",
-                "contractCode": "",
                 "arguments": [],
                 "gasLimit": "0x100000",
                 "gasPrice": "0x01"
@@ -44,14 +43,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "2",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0x01",
                 "function": "balanceOf",
-                "contractCode": "",
                 "arguments": [
                     "``account_1_____________________s1"
                 ],
@@ -68,14 +66,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "3",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0x01",
                 "function": "allowance",
-                "contractCode": "",
                 "arguments": [
                     "``account_1_____________________s1",
                     "``account_1_____________________s1"
@@ -93,14 +90,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "4",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0x01",
                 "function": "transfer",
-                "contractCode": "",
                 "arguments": [
                     "``account_1_____________________s1",
                     "0x01"
@@ -118,14 +114,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "5",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0x01",
                 "function": "approve",
-                "contractCode": "",
                 "arguments": [
                     "``account_1_____________________s1",
                     "0x01"
@@ -143,14 +138,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "6",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0x01",
                 "function": "transferFrom",
-                "contractCode": "",
                 "arguments": [
                     "``account_1_____________________s1",
                     "``account_1_____________________s1",

@@ -24,14 +24,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "1",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0",
                 "function": "transferFrom",
-                "contractCode": "",
                 "arguments": [
                     "``coin_holder_1_________________sx",
                     "0x0200000000000000000000000000000000000000000000000000000000000000",

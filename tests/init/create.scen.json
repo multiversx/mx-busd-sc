@@ -20,7 +20,7 @@
             ]
         },
         {
-            "step": "tx",
+            "step": "scDeploy",
             "txId": "1",
             "comment": "deploy contract",
             "tx": {
@@ -63,14 +63,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "2",
             "tx": {
                 "from": "``busd_owner____________________s1",
                 "to": "``new_busd_contract_____________s1",
                 "value": "0",
                 "function": "balanceOf",
-                "contractCode": "",
                 "arguments": [
                     "``busd_owner____________________s1"
                 ],

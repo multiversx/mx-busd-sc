@@ -23,14 +23,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "1",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0",
                 "function": "transferFrom",
-                "contractCode": "",
                 "arguments": [
                     "``coin_holder_1_________________sx",
                     "``coin_holder_2_________________sx",
@@ -58,14 +57,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "2",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0",
                 "function": "transferFrom",
-                "contractCode": "",
                 "arguments": [
                     "``coin_holder_1_________________sx",
                     "0x6666666666666666666606666666666666666666666666166666666666661234",
@@ -93,14 +91,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "3",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0",
                 "function": "transferFrom",
-                "contractCode": "",
                 "arguments": [
                     "``coin_holder_1_________________sx",
                     "``coin_holder_1_________________sx",
@@ -128,14 +125,13 @@
             }
         },
         {
-            "step": "tx",
+            "step": "scCall",
             "txId": "4",
             "tx": {
                 "from": "``account_1_____________________s1",
                 "to": "``busd__________________________s1",
                 "value": "0",
                 "function": "transferFrom",
-                "contractCode": "",
                 "arguments": [
                     "``coin_holder_1_________________sx",
                     "``account_1_____________________s1",
