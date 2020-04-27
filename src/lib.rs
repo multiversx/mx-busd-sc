@@ -225,14 +225,17 @@ pub trait BUSDCoin {
     /// 
     /// * `proposed_owner` The address to transfer ownership to.
     /// 
-    fn propose_owner(&self, proposed_owner: Address) -> Result<(), &str> {
+    fn proposeOwner(&self, proposed_owner: Address) -> Result<(), &str> {
         let caller = self.get_caller();
         if caller != self.getContractOwner() {
-            return Err("only owner can propose another owner"); 
+            return Err("only owner can propose another owner");
+        }
+        if caller == proposed_owner {
+            return Err("current owner cannot propose itself");
         }
         if let Some(previous_proposed_owner) = self.getProposedOwner() {
-            if caller == previous_proposed_owner {
-                return Err("caller already is owner"); 
+            if proposed_owner == previous_proposed_owner {
+                return Err("caller already is proposed owner"); 
             }
         }
         self.storage_store_bytes32(
@@ -244,7 +247,7 @@ pub trait BUSDCoin {
     }
 
     /// Allows the current owner or proposed owner to cancel transferring control of the contract to the proposed owner.
-    fn disregard_proposed_owner() -> Result<(), &str> {
+    fn disregardProposedOwner() -> Result<(), &str> {
         match self.getProposedOwner() {
             None => Err("can only disregard a proposed owner that was previously set"),
             Some(proposed_owner) => {
@@ -263,7 +266,7 @@ pub trait BUSDCoin {
     }
 
     /// Allows the proposed owner to complete transferring control of the contract to herself..
-    fn claim_ownership() -> Result<(), &str> {
+    fn claimOwnership() -> Result<(), &str> {
         match self.getProposedOwner() {
             None => Err("no owner proposed"),
             Some(proposed_owner) => {
