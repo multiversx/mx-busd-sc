@@ -494,22 +494,13 @@ pub trait BUSDCoin {
 
     /// Yields the currently proposed new owner, if any.
     #[view]
-    fn getSupplyController(&self) -> Option<Address> {
-        if self.storage_load_len(&SUPPLY_CONTROLLER_KEY.into()) == 0 {
-            None
-        } else {
-            Some(self.storage_load_bytes32(&SUPPLY_CONTROLLER_KEY.into()).into())
-        }
+    fn getSupplyController(&self) -> Address {
+        self.storage_load_bytes32(&SUPPLY_CONTROLLER_KEY.into()).into()
     }
 
     #[private]
     fn _caller_is_supply_controller(&self) -> bool {
-        if let Some(asset_prot_role) = self.getAssetProtectionRole() {
-            if self.get_caller() == asset_prot_role {
-                return true;
-            }
-        }
-        false
+        return self.get_caller() == self.getSupplyController()
     }
 
     /// Sets a new supply controller address.
@@ -521,14 +512,12 @@ pub trait BUSDCoin {
     fn setSupplyController(&self, new_supply_controller: &Address) -> Result<(), &str> {
         let caller = self.get_caller();
         if caller != self.getContractOwner() && 
-           !self._caller_is_asset_protection_role() {
-            return Err("only asset protection role or owner can change asset protection role")
+           !self._caller_is_supply_controller() {
+            return Err("only supply controller or owner can change supply controller")
         }
 
         // needed for logging
-        let old_supply_controller = self
-            .getSupplyController()
-            .unwrap_or_else(|| Address::from([0u8; 32]));
+        let old_supply_controller = self.getSupplyController();
 
         // change supply controller
         self.storage_store_bytes32(
@@ -536,7 +525,7 @@ pub trait BUSDCoin {
             &new_supply_controller.as_fixed_bytes());
 
         // log event
-        self.asset_protection_role_set_event(
+        self.supply_controller_set_event(
             &old_supply_controller,
             new_supply_controller,
             ()
@@ -583,7 +572,7 @@ pub trait BUSDCoin {
     /// 
     fn decreaseSupply(&self, amount: BigUint) -> Result<(), &str> {
         if !self._caller_is_supply_controller() {
-            return Err("only supply controller can increase supply");
+            return Err("only supply controller can decrease supply");
         }
         let supply_controller = self.get_caller();
 

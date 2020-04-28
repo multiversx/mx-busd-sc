@@ -1,0 +1,176 @@
+{
+    "name": "create",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``supply_controller_____________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``someone_else__________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                }
+            },
+            "newAddresses": [
+                {
+                    "creatorAddress": "``busd_owner____________________s1",
+                    "creatorNonce": "0",
+                    "newAddress": "``new_busd_contract_____________s1"
+                }
+            ]
+        },
+        {
+            "step": "scDeploy",
+            "txId": "1",
+            "comment": "deploy contract",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "",
+                "value": "0",
+                "function": "",
+                "contractCode": "file:../../busd.wasm",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2",
+            "comment": "set new supply controller",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "setSupplyController",
+                "arguments": [
+                    "``supply_controller_____________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ ],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``new_busd_contract_____________s1",
+                        "identifier": "0x000000000000000000000000000000000000000000000000000000000000000e",
+                        "topics": [
+                            "``busd_owner____________________s1",
+                            "``supply_controller_____________s1"
+                        ],
+                        "data": ""
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "3",
+            "comment": "get proposed owner",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "getSupplyController",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "``supply_controller_____________s1" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4",
+            "comment": "increase supply",
+            "tx": {
+                "from": "``supply_controller_____________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "increaseSupply",
+                "arguments": [
+                    "999,999,998"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ ],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``new_busd_contract_____________s1",
+                        "identifier": "0x000000000000000000000000000000000000000000000000000000000000000c",
+                        "topics": [
+                            "``supply_controller_____________s1"
+                        ],
+                        "data": "999,999,998"
+                    },
+                    {
+                        "address": "``new_busd_contract_____________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "0x0000000000000000000000000000000000000000000000000000000000000000",
+                            "``supply_controller_____________s1"
+                        ],
+                        "data": "999,999,998"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "5",
+            "comment": "decrease supply",
+            "tx": {
+                "from": "``supply_controller_____________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "decreaseSupply",
+                "arguments": [
+                    "999,999,999"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ ],
+                "status": "4",
+                "message": "not enough supply to decrease",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}

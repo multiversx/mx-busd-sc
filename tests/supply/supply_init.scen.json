@@ -1,0 +1,139 @@
+{
+    "name": "create",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``someone_else__________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                }
+            },
+            "newAddresses": [
+                {
+                    "creatorAddress": "``busd_owner____________________s1",
+                    "creatorNonce": "0",
+                    "newAddress": "``new_busd_contract_____________s1"
+                }
+            ]
+        },
+        {
+            "step": "scDeploy",
+            "txId": "1",
+            "comment": "deploy contract",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "",
+                "value": "0",
+                "function": "",
+                "contractCode": "file:../../busd.wasm",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2",
+            "comment": "owner should be suply controller",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "getSupplyController",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "``busd_owner____________________s1" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2",
+            "comment": "total supply should be 0 after init",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "totalSupply",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "0" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "3",
+            "comment": "owner balance should be 0 after init",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "balanceOf",
+                "arguments": [
+                    "``busd_owner____________________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "0" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4",
+            "comment": "other balance should be 0 after init",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "balanceOf",
+                "arguments": [
+                    "``someone_else__________________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "0" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}
