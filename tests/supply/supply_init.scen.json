@@ -34,7 +34,7 @@
                 "to": "",
                 "value": "0",
                 "function": "",
-                "contractCode": "file:../../busd.wasm",
+                "contractCode": "file:../../output/busd.wasm",
                 "arguments": [],
                 "gasLimit": "100,000",
                 "gasPrice": "0x01"

@@ -28,7 +28,7 @@
                 "to": "",
                 "value": "0",
                 "function": "",
-                "contractCode": "file:../../busd.wasm",
+                "contractCode": "file:../../output/busd.wasm",
                 "arguments": [],
                 "gasLimit": "100,000",
                 "gasPrice": "0x01"
@@ -58,7 +58,7 @@
                         "0x0500000000000000000000000000000000000000000000000000000000000000": "true",
                         "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1"
                     },
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         },

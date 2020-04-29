@@ -51,7 +51,7 @@
                         "keccak256:2|``holder_gets_wiped_____________s1|``another_holder________________s1": "1000"
                         
                     },
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         },

@@ -14,7 +14,7 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {},
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         },
@@ -51,7 +51,7 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {},
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         }

@@ -33,7 +33,7 @@
                         "keccak256:1|``holder_1______________________s1": "500"
                         
                     },
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         },

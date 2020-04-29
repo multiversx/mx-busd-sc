@@ -17,7 +17,7 @@
                         "keccak256:1|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
                         "0x0000000000000000000000000000000000000000000000000000000000000000": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5"
                     },
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         },
@@ -70,7 +70,7 @@
                         "keccak256:1|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
                         "0x0000000000000000000000000000000000000000000000000000000000000000": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5"
                     },
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         }

@@ -27,7 +27,7 @@
 
                         "keccak256:1|``someone_else__________________s1": "12345000"
                     },
-                    "code": "file:../../busd.wasm"
+                    "code": "file:../../output/busd.wasm"
                 }
             }
         },
