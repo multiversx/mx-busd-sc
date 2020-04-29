@@ -703,7 +703,4 @@ pub trait BUSDCoin {
         new_supply_controller: &Address,
         _data: ());
     
-    // DELEGATED TRANSFER EVENTS
-
-    // TODO
 }
