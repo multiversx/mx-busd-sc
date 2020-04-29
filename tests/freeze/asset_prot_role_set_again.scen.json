@@ -1,5 +1,5 @@
 {
-    "name": "supply test",
+    "name": "asset protection role test",
     "steps": [
         {
             "step": "setState",

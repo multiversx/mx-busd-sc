@@ -1,0 +1,151 @@
+{
+    "name": "wipe test",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``asset_protection_role_________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_no_freeze______________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_gets_wiped_____________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``another_holder________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``busd_contract_________________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0000000000000000000000000000000000000000000000000000000000000000": "23,000",
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "false",
+                        "0x0600000000000000000000000000000000000000000000000000000000000000": "``asset_protection_role_________s1",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+
+                        "keccak256:1|``holder_gets_wiped_____________s1": "500",
+                        "keccak256:1|``holder_no_freeze______________s1": "500",
+
+                        "keccak256:2|``holder_no_freeze______________s1|``another_holder________________s1": "1000",
+                        "keccak256:2|``holder_gets_wiped_____________s1|``another_holder________________s1": "1000"
+                        
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "1-wipe",
+            "comment": "wipe, but by someone unauthorized",
+            "tx": {
+                "from": "``another_holder________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "wipeFrozenAddress",
+                "arguments": [
+                    "``holder_gets_wiped_____________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "only asset protection role can wipe",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2-wipe",
+            "comment": "owner also not allowed if not asset protection role",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "wipeFrozenAddress",
+                "arguments": [
+                    "``holder_gets_wiped_____________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "only asset protection role can wipe",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4",
+            "comment": "check balance after",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "balanceOf",
+                "arguments": [
+                    "``holder_gets_wiped_____________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "500" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "5",
+            "comment": "check total supply after",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "totalSupply",
+                "arguments": [],
+                "gasLimit": "0x100000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "23,000" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}

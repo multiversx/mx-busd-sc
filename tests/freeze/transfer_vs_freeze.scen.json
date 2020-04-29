@@ -1,5 +1,5 @@
 {
-    "name": "pause test",
+    "name": "freeze test",
     "steps": [
         {
             "step": "setState",

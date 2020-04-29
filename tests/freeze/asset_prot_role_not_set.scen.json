@@ -76,53 +76,71 @@
         },
         {
             "step": "scCall",
-            "txId": "2",
-            "comment": "set new asset protection role",
+            "txId": "3-freeze",
+            "comment": "freeze",
             "tx": {
-                "from": "``busd_owner____________________s1",
+                "from": "``asset_protection_role_________s1",
                 "to": "``new_busd_contract_____________s1",
                 "value": "0",
-                "function": "setAssetProtectionRole",
+                "function": "freeze",
                 "arguments": [
-                    "``asset_protection_role_________s1"
+                    "``holder_gets_frozen____________s1"
                 ],
                 "gasLimit": "100,000",
                 "gasPrice": "0x01"
             },
             "expect": {
-                "out": [ ],
-                "status": "",
-                "logs": [
-                    {
-                        "address": "``new_busd_contract_____________s1",
-                        "identifier": "0x000000000000000000000000000000000000000000000000000000000000000b",
-                        "topics": [
-                            "0x0000000000000000000000000000000000000000000000000000000000000000",
-                            "``asset_protection_role_________s1"
-                        ],
-                        "data": ""
-                    }
-                ],
+                "out": [],
+                "status": "4",
+                "message": "only asset protection role can freeze",
+                "logs": [],
                 "gas": "*",
                 "refund": "*"
             }
         },
         {
             "step": "scCall",
-            "txId": "check_after",
-            "comment": "get new asset protection role",
+            "txId": "3-freeze",
+            "comment": "freeze",
             "tx": {
-                "from": "``someone_else__________________s1",
+                "from": "``asset_protection_role_________s1",
                 "to": "``new_busd_contract_____________s1",
                 "value": "0",
-                "function": "getAssetProtectionRole",
-                "arguments": [],
+                "function": "unfreeze",
+                "arguments": [
+                    "``holder_gets_frozen____________s1"
+                ],
                 "gasLimit": "100,000",
                 "gasPrice": "0x01"
             },
             "expect": {
-                "out": [ "``asset_protection_role_________s1" ],
-                "status": "",
+                "out": [],
+                "status": "4",
+                "message": "only asset protection role can unfreeze",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "3-freeze",
+            "comment": "freeze",
+            "tx": {
+                "from": "``asset_protection_role_________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "wipeFrozenAddress",
+                "arguments": [
+                    "``holder_gets_frozen____________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "only asset protection role can wipe",
                 "logs": [],
                 "gas": "*",
                 "refund": "*"
