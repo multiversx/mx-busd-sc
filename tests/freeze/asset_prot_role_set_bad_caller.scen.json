@@ -1,0 +1,81 @@
+{
+    "name": "supply test",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``asset_protection_role_________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``someone_else__________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                }
+            },
+            "newAddresses": [
+                {
+                    "creatorAddress": "``busd_owner____________________s1",
+                    "creatorNonce": "0",
+                    "newAddress": "``new_busd_contract_____________s1"
+                }
+            ]
+        },
+        {
+            "step": "scDeploy",
+            "txId": "1",
+            "comment": "deploy contract",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "",
+                "value": "0",
+                "function": "",
+                "contractCode": "file:../../busd.wasm",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2",
+            "comment": "set new asset protection role",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``new_busd_contract_____________s1",
+                "value": "0",
+                "function": "setAssetProtectionRole",
+                "arguments": [
+                    "``asset_protection_role_________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ ],
+                "status": "4",
+                "message": "only asset protection role or owner can change asset protection role",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}
