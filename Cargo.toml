@@ -11,6 +11,12 @@ path = "src/lib.rs"
 name = "busd"
 path = "src/lib.rs"
 
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
 
 [dependencies]
 elrond-wasm = "0.3.0"
