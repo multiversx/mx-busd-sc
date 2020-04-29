@@ -1,0 +1,505 @@
+{
+    "name": "pause test",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``asset_protection_role_________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_no_freeze______________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_gets_frozen____________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``another_holder________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``busd_contract_________________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "false",
+                        "0x0600000000000000000000000000000000000000000000000000000000000000": "``asset_protection_role_________s1",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+
+                        "keccak256:1|``holder_gets_frozen____________s1": "500",
+                        "keccak256:1|``holder_no_freeze______________s1": "500",
+
+                        "keccak256:2|``holder_no_freeze______________s1|``another_holder________________s1": "1000",
+                        "keccak256:2|``holder_gets_frozen____________s1|``another_holder________________s1": "1000"
+                        
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "1",
+            "comment": "not yet frozen, transfer ok",
+            "tx": {
+                "from": "``holder_no_freeze______________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transfer",
+                "arguments": [
+                    "``holder_gets_frozen____________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "``holder_no_freeze______________s1",
+                            "``holder_gets_frozen____________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2-from",
+            "comment": "not yet frozen, allowance ok",
+            "tx": {
+                "from": "``holder_gets_frozen____________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_no_freeze______________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000002",
+                        "topics": [
+                            "``holder_gets_frozen____________s1",
+                            "``holder_no_freeze______________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2-to",
+            "comment": "not yet frozen, allowance ok, we need the allowance for later",
+            "tx": {
+                "from": "``holder_no_freeze______________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_gets_frozen____________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000002",
+                        "topics": [
+                            "``holder_no_freeze______________s1",
+                            "``holder_gets_frozen____________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "3-freeze",
+            "comment": "freeze",
+            "tx": {
+                "from": "``asset_protection_role_________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "freeze",
+                "arguments": [
+                    "``holder_gets_frozen____________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000008",
+                        "topics": [
+                            "``holder_gets_frozen____________s1"
+                        ],
+                        "data": ""
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4-from",
+            "comment": "no transfer from frozen",
+            "tx": {
+                "from": "``holder_gets_frozen____________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transfer",
+                "arguments": [
+                    "``holder_no_freeze______________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "address frozen",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4-to",
+            "comment": "no transfer to frozen",
+            "tx": {
+                "from": "``holder_no_freeze______________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transfer",
+                "arguments": [
+                    "``holder_gets_frozen____________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "address frozen",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "5-from",
+            "comment": "no allowance from frozen",
+            "tx": {
+                "from": "``holder_gets_frozen____________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_no_freeze______________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "address frozen",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "5-to",
+            "comment": "no allowance to frozen",
+            "tx": {
+                "from": "``holder_no_freeze______________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_gets_frozen____________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "address frozen",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "6-from",
+            "comment": "no transferFrom from frozen",
+            "tx": {
+                "from": "``another_holder________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transferFrom",
+                "arguments": [
+                    "``holder_gets_frozen____________s1",
+                    "``holder_no_freeze______________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "address frozen",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "6-to",
+            "comment": "no transferFrom to frozen",
+            "tx": {
+                "from": "``another_holder________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transferFrom",
+                "arguments": [
+                    "``holder_no_freeze______________s1",
+                    "``holder_gets_frozen____________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "address frozen",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "6-by",
+            "comment": "no transferFrom called by frozen, even if frozen is neither sender not recipient",
+            "tx": {
+                "from": "``holder_gets_frozen____________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transferFrom",
+                "arguments": [
+                    "``holder_no_freeze______________s1",
+                    "``another_holder________________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "address frozen",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "7-unfreeze",
+            "comment": "unfreeze",
+            "tx": {
+                "from": "``asset_protection_role_________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "unfreeze",
+                "arguments": [
+                    "``holder_gets_frozen____________s1"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000009",
+                        "topics": [
+                            "``holder_gets_frozen____________s1"
+                        ],
+                        "data": ""
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "8",
+            "comment": "not frozen, transfer ok again",
+            "tx": {
+                "from": "``holder_no_freeze______________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transfer",
+                "arguments": [
+                    "``holder_gets_frozen____________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "``holder_no_freeze______________s1",
+                            "``holder_gets_frozen____________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "9",
+            "comment": "not frozen, allowance ok again",
+            "tx": {
+                "from": "``holder_gets_frozen____________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "approve",
+                "arguments": [
+                    "``holder_no_freeze______________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000002",
+                        "topics": [
+                            "``holder_gets_frozen____________s1",
+                            "``holder_no_freeze______________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "10",
+            "comment": "not frozen, transferFrom ok again",
+            "tx": {
+                "from": "``holder_no_freeze______________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "transferFrom",
+                "arguments": [
+                    "``holder_gets_frozen____________s1",
+                    "``holder_no_freeze______________s1",
+                    "10"
+                ],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd_contract_________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "``holder_gets_frozen____________s1",
+                            "``holder_no_freeze______________s1"
+                        ],
+                        "data": "10"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}

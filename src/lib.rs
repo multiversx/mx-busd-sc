@@ -60,10 +60,6 @@ pub trait BUSDCoin {
         if self.isPaused() {
             return Err("paused");
         }
-
-        if self.isFrozen(&sender) || self.isFrozen(&recipient) {
-            return Err("address frozen");
-        }
         
         // load sender balance
         let sender_balance_key = self._balance_key(&sender);
@@ -99,6 +95,10 @@ pub trait BUSDCoin {
     fn transfer(&self, to: Address, amount: BigUint) -> Result<(), &str> {
         // sender is the caller
         let sender = self.get_caller();
+
+        if self.isFrozen(&sender) || self.isFrozen(&to) {
+            return Err("address frozen");
+        }
 
         self._perform_transfer(sender, to, amount)
     }
@@ -136,6 +136,10 @@ pub trait BUSDCoin {
         
         // get caller
         let caller = self.get_caller();
+
+        if self.isFrozen(&caller) || self.isFrozen(&sender) || self.isFrozen(&recipient) {
+            return Err("address frozen");
+        }
 
         // load allowance
         let allowance_key = self._allowance_key(&sender, &caller);
@@ -441,7 +445,7 @@ pub trait BUSDCoin {
         }
         self.storage_store_i64(&frozen_key, 0);
 
-        self.address_frozen_event(&address, ());
+        self.address_unfrozen_event(&address, ());
         Ok(())
     }
 
