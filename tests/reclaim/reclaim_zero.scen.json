@@ -1,0 +1,135 @@
+{
+    "name": "reclaim test",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``someone_else__________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``busd__________________________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "0x0000000000000000000000000000000000000000000000000000000000000000": "12345000",
+                        "0x0300000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+                        "0x0500000000000000000000000000000000000000000000000000000000000000": "false",
+                        "0x0800000000000000000000000000000000000000000000000000000000000000": "``busd_owner____________________s1",
+
+                        "keccak256:1|``someone_else__________________s1": "12345000"
+                    },
+                    "code": "file:../../busd.wasm"
+                }
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "2",
+            "comment": "check the contract balance",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``busd__________________________s1",
+                "value": "0",
+                "function": "balanceOf",
+                "arguments": [
+                    "``busd__________________________s1"
+                ],
+                "gasLimit": "0x100000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "0" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "3",
+            "comment": "reclaim!",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``busd__________________________s1",
+                "value": "0",
+                "function": "reclaimBUSD",
+                "arguments": [],
+                "gasLimit": "0x100000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ ],
+                "status": "",
+                "logs": [
+                    {
+                        "address": "``busd__________________________s1",
+                        "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
+                        "topics": [
+                            "``busd__________________________s1",
+                            "``busd_owner____________________s1"
+                        ],
+                        "data": "0"
+                    }
+                ],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "4",
+            "comment": "check the contract balance",
+            "tx": {
+                "from": "``someone_else__________________s1",
+                "to": "``busd__________________________s1",
+                "value": "0",
+                "function": "balanceOf",
+                "arguments": [
+                    "``busd__________________________s1"
+                ],
+                "gasLimit": "0x100000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "0" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "5",
+            "comment": "check owner's balance",
+            "tx": {
+                "from": "``busd_owner____________________s1",
+                "to": "``busd__________________________s1",
+                "value": "0",
+                "function": "balanceOf",
+                "arguments": [
+                    "``busd_owner____________________s1"
+                ],
+                "gasLimit": "0x100000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "0" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}
