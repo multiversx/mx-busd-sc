@@ -3,7 +3,7 @@
 /target/
 
 # Ouptut
-*.wasm
+output
 
 # Some local dev scripts
 debug-tests.sh
