@@ -4,9 +4,6 @@
 #![allow(non_snake_case)]
 #![allow(unused_attributes)]
 
-// mod storage;
-// pub use storage::*;
-
 const NAME:     &[u8]    = b"Binance USD";
 const SYMBOL:   &[u8]    = b"BUSD";
 const DECIMALS: usize    = 18;
@@ -81,7 +78,7 @@ pub trait BUSDCoin {
         self._set_balance(&recipient, &rec_balance);
     
         // log operation
-        //self.transfer_event(&sender, &recipient, &amount);
+        self.transfer_event(&sender, &recipient, &amount);
 
         Ok(())
     }
