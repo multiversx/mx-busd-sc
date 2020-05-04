@@ -14,8 +14,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:1|``account_1_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                        "0x0000000000000000000000000000000000000000000000000000000000000000": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+                        "keccak256:``bal|``account_1_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "keccak256:``ts": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -30,7 +30,7 @@
                 "value": "0",
                 "function": "transfer",
                 "arguments": [
-                    "0x0200000000000000000000000000000000000000000000000000000000000000",
+                    "``account_2_____________________s1",
                     "+0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                 ],
                 "gasLimit": "0x100000",
@@ -45,7 +45,7 @@
                         "identifier": "0x0000000000000000000000000000000000000000000000000000000000000001",
                         "topics": [
                             "``account_1_____________________s1",
-                            "0x0200000000000000000000000000000000000000000000000000000000000000"
+                            "``account_2_____________________s1"
                         ],
                         "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                     }
@@ -67,8 +67,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "0xfe1847a18709e94e8938511fd1050153c9f207efa75081b2736362b3d4cf962c": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                        "0x0000000000000000000000000000000000000000000000000000000000000000": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+                        "keccak256:``bal|``account_2_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "keccak256:``ts": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

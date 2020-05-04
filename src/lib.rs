@@ -4,11 +4,32 @@
 #![allow(non_snake_case)]
 #![allow(unused_attributes)]
 
-mod storage;
-pub use storage::*;
+// mod storage;
+// pub use storage::*;
+
+const NAME:     &[u8]    = b"Binance USD";
+const SYMBOL:   &[u8]    = b"BUSD";
+const DECIMALS: usize    = 18;
 
 #[elrond_wasm_derive::contract(BUSDCoinImpl)]
 pub trait BUSDCoin {
+
+    // STATIC INFO
+
+    #[view]
+    fn name(&self) -> Vec<u8> {
+        NAME.to_vec()
+    }
+
+    #[view]
+    fn symbol(&self) -> Vec<u8> {
+        SYMBOL.to_vec()
+    }
+
+    #[view]
+    fn decimals(&self) -> usize {
+        DECIMALS
+    }
 
     // CONSTRUCTOR
 
@@ -17,71 +38,50 @@ pub trait BUSDCoin {
     fn init(&self) {
         // owner will be deploy caller
         let owner = self.get_caller();
-        self.storage_store_bytes32(&OWNER_KEY.into(), &owner.as_fixed_bytes());
+        self._set_contract_owner(&owner);
         
         // owner is also the initial supply controller
-        self.storage_store_bytes32(&SUPPLY_CONTROLLER_KEY.into(), &owner.as_fixed_bytes());
+        self._set_supply_controller(&owner);
+        
+        self._set_asset_protection_role(None);
+        self._set_proposed_owner(None);
     
         // the contract starts paused
-        self.storage_store_i64(&PAUSED_KEY.into(), 1);
-    }
-
-    #[view]
-    fn name() -> Vec<u8> {
-        NAME.to_vec()
-    }
-
-    #[view]
-    fn symbol() -> Vec<u8> {
-        SYMBOL.to_vec()
-    }
-
-    #[view]
-    fn decimals() -> usize {
-        DECIMALS
+        self._set_paused(true);
     }
 
     // ERC20 LOGIC
 
     /// Total number of tokens in existence.
     #[view]
-    fn totalSupply(&self) -> BigUint {
-        let total_supply = self.storage_load_big_uint(&TOTAL_SUPPLY_KEY.into());
-        total_supply
-    }
+    #[storage_get("ts")]
+    fn totalSupply(&self) -> BigUint;
 
     #[private]
-    fn _save_total_supply(&self, new_total_supply: &BigUint) {
-        self.storage_store_big_uint(&TOTAL_SUPPLY_KEY.into(), new_total_supply);
-    }
+    #[storage_set("ts")]
+    fn _set_total_supply(&self, total_supply: &BigUint);
 
     #[private]
-    fn _perform_transfer(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {
-        if self.isPaused() {
-            return Err("paused");
-        }
-        
+    fn _perform_transfer(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {        
         // load sender balance
-        let sender_balance_key = self._balance_key(&sender);
-        let mut sender_balance = self.storage_load_big_uint(&sender_balance_key);
+        let mut sender_balance = self.balanceOf(&sender);
     
         // check if enough funds
         if &amount > &sender_balance {
             return Err("insufficient funds");
         }
     
-        // decrease & save sender balance
+        // decrease & set sender balance
         sender_balance -= &amount;
-        self.storage_store_big_uint(&sender_balance_key, &sender_balance);
+        self._set_balance(&sender, &sender_balance);
     
-        // load, increase & save receiver balance
-        let rec_balance_key = self._balance_key(&recipient);
-        let mut rec_balance = self.storage_load_big_uint(&rec_balance_key);
+        // load, increase & set receiver balance
+        let mut rec_balance = self.balanceOf(&recipient);
         rec_balance += &amount;
-        self.storage_store_big_uint(&rec_balance_key, &rec_balance);
+        self._set_balance(&recipient, &rec_balance);
     
         // log operation
-        self.transfer_event(&sender, &recipient, &amount);
+        //self.transfer_event(&sender, &recipient, &amount);
 
         Ok(())
     }
@@ -93,6 +93,10 @@ pub trait BUSDCoin {
     /// * `to` The address to transfer to.
     /// 
     fn transfer(&self, to: Address, amount: BigUint) -> Result<(), &str> {
+        if self.isPaused() {
+            return Err("paused");
+        }
+        
         // sender is the caller
         let sender = self.get_caller();
 
@@ -110,14 +114,12 @@ pub trait BUSDCoin {
     /// * `address` The address to query the the balance of
     /// 
     #[view]
-    fn balanceOf(&self, address: Address) -> BigUint {
-        // load balance
-        let balance_key = self._balance_key(&address);
-        let balance = self.storage_load_big_uint(&balance_key);
+    #[storage_get("bal")]
+    fn balanceOf(&self, address: &Address) -> BigUint;
 
-        // return balance as big int
-        balance
-    }
+    #[private]
+    #[storage_set("bal")]
+    fn _set_balance(&self, address: &Address, balance: &BigUint);
 
     // ERC20 FUNCTIONALITY
  
@@ -142,8 +144,7 @@ pub trait BUSDCoin {
         }
 
         // load allowance
-        let allowance_key = self._allowance_key(&sender, &caller);
-        let mut allowance = self.storage_load_big_uint(&allowance_key);
+        let mut allowance = self.allowance(&sender, &caller);
 
         // amount should not exceed allowance
         if &amount > &allowance {
@@ -152,8 +153,9 @@ pub trait BUSDCoin {
 
         // update allowance
         allowance -= &amount;
-        self.storage_store_big_uint(&allowance_key, &allowance);
+        self._set_allowance(&sender, &caller, &allowance);
 
+        // transfer
         self._perform_transfer(sender, recipient, amount)
     }
 
@@ -178,8 +180,7 @@ pub trait BUSDCoin {
         }
 
         // store allowance
-        let allowance_key = self._allowance_key(&caller, &spender);
-        self.storage_store_big_uint(&allowance_key, &amount);
+        self._set_allowance(&caller, &spender, &amount);
       
         // log operation
         self.approve_event(&caller, &spender, &amount);
@@ -194,34 +195,32 @@ pub trait BUSDCoin {
     /// * `spender` The address that will spend the funds.
     /// 
     #[view]
-    fn allowance(&self, owner: Address, spender: Address) -> BigUint {
-        // get allowance
-        let allowance_key = self._allowance_key(&owner, &spender);
-        let res = self.storage_load_big_uint(&allowance_key);
+    #[storage_get("alw")]
+    fn allowance(&self, owner: &Address, spender: &Address) -> BigUint;
 
-        // return allowance as big int
-        res
-    }
+    #[private]
+    #[storage_set("alw")]
+    fn _set_allowance(&self, owner: &Address, spender: &Address, allowance: &BigUint);
 
     // OWNER FUNCTIONALITY
 
     /// Yields the current contract owner.
     #[view]
-    fn getContractOwner(&self) -> Address {
-        self.storage_load_bytes32(&OWNER_KEY.into()).into()
-    }
+    #[storage_get("own")]
+    fn getContractOwner(&self) -> Address;
+
+    #[private]
+    #[storage_set("own")]
+    fn _set_contract_owner(&self, owner: &Address);
 
     /// Yields the currently proposed new owner, if any.
     #[view]
-    fn getProposedOwner(&self) -> Option<Address> {
-        if self.storage_load_len(&PROPOSED_OWNER_KEY.into()) == 0 {
-            None
-        } else {
-            let proposed_owner_bytes = self.storage_load_bytes32(
-                &PROPOSED_OWNER_KEY.into());
-            Some(proposed_owner_bytes.into())
-        }
-    }
+    #[storage_get("prop")]
+    fn getProposedOwner(&self) -> Option<Address>;
+
+    #[private]
+    #[storage_set("prop")]
+    fn _set_proposed_owner(&self, proposed_owner: Option<&Address>);
 
     /// Allows the current owner to begin transferring control of the contract to a proposedOwner
     /// 
@@ -242,10 +241,10 @@ pub trait BUSDCoin {
                 return Err("caller already is proposed owner"); 
             }
         }
-        self.storage_store_bytes32(
-            &PROPOSED_OWNER_KEY.into(), 
-            &proposed_owner.as_fixed_bytes());
 
+        self._set_proposed_owner(Some(&proposed_owner));
+
+        // event
         self.ownership_transfer_proposed_event(&caller, &proposed_owner, ());
         Ok(())
     }
@@ -259,9 +258,7 @@ pub trait BUSDCoin {
                 if caller != self.getContractOwner() && caller != proposed_owner {
                     return Err("only proposedOwner or owner can disregard proposed owner"); 
                 }
-                self.storage_store(
-                    &PROPOSED_OWNER_KEY.into(),
-                    &[]);
+                self._set_proposed_owner(None);
 
                 self.ownership_transfer_disregarded_event(&proposed_owner, ());
                 Ok(())
@@ -281,14 +278,10 @@ pub trait BUSDCoin {
                 
                 let old_owner = self.getContractOwner();
 
-                // save new owner
-                self.storage_store_bytes32(
-                    &OWNER_KEY.into(),
-                    &proposed_owner.as_fixed_bytes());
+                // set new owner
+                self._set_contract_owner(&proposed_owner);
                 // clear proposed owner
-                self.storage_store(
-                    &PROPOSED_OWNER_KEY.into(),
-                    &[]);
+                self._set_proposed_owner(None);
 
                 self.ownership_transferred_event(&old_owner, &proposed_owner, ());
                 Ok(())  
@@ -307,17 +300,15 @@ pub trait BUSDCoin {
 
         // load contract own balance
         let contract_address = self.get_own_address();
-        let contract_balance_key = self._balance_key(&contract_address);
-        let contract_balance = self.storage_load_big_uint(&contract_balance_key);
+        let contract_balance = self.balanceOf(&contract_address);
 
         // clear contract own balance
-        self.storage_store(&contract_balance_key, &[]);
+        self._set_balance(&contract_address, &0.into());
 
         // increment owner balance
-        let owner_balance_key = self._balance_key(&caller);
-        let mut owner_balance = self.storage_load_big_uint(&owner_balance_key);
+        let mut owner_balance = self.balanceOf(&caller);
         owner_balance += &contract_balance;
-        self.storage_store_big_uint(&owner_balance_key, &owner_balance);
+        self._set_balance(&caller, &owner_balance);
     
         // log operation
         self.transfer_event(&contract_address, &caller, &contract_balance);
@@ -328,16 +319,19 @@ pub trait BUSDCoin {
     // PAUSABILITY FUNCTIONALITY
 
     #[view]
-    fn isPaused(&self) -> bool {
-        self.storage_load_len(&PAUSED_KEY.into()) > 0
-    }
+    #[storage_get("paused")]
+    fn isPaused(&self) -> bool;
+
+    #[private]
+    #[storage_set("paused")]
+    fn _set_paused(&self, paused: bool);
 
     /// Called by the owner to pause, triggers stopped state
     fn pause(&self) -> Result<(), &str> {
         if self.isPaused() {
             return Err("already paused")
         }
-        self.storage_store_i64(&PAUSED_KEY.into(), 1);
+        self._set_paused(true);
 
         self.pause_event(());
         Ok(())
@@ -348,7 +342,7 @@ pub trait BUSDCoin {
         if !self.isPaused() {
             return Err("already unpaused")
         }
-        self.storage_store_i64(&PAUSED_KEY.into(), 0);
+        self._set_paused(false);
 
         self.unpause_event(());
         Ok(())
@@ -358,13 +352,12 @@ pub trait BUSDCoin {
 
     /// Yields the currently proposed new owner, if any.
     #[view]
-    fn getAssetProtectionRole(&self) -> Option<Address> {
-        if self.storage_load_len(&ASSET_PROTECTION_ROLE_KEY.into()) == 0 {
-            None
-        } else {
-            Some(self.storage_load_bytes32(&ASSET_PROTECTION_ROLE_KEY.into()).into())
-        }
-    }
+    #[storage_get("apr")]
+    fn getAssetProtectionRole(&self) -> Option<Address>;
+
+    #[private]
+    #[storage_set("apr")]
+    fn _set_asset_protection_role(&self, apr: Option<&Address>);
 
     #[private]
     fn _caller_is_asset_protection_role(&self) -> bool {
@@ -395,9 +388,7 @@ pub trait BUSDCoin {
             .unwrap_or_else(|| Address::from([0u8; 32]));
 
         // change asset protection role
-        self.storage_store_bytes32(
-            &ASSET_PROTECTION_ROLE_KEY.into(),
-            &new_asset_prot_role.as_fixed_bytes());
+        self._set_asset_protection_role(Some(new_asset_prot_role));
 
         // log event
         self.asset_protection_role_set_event(
@@ -419,11 +410,10 @@ pub trait BUSDCoin {
         if !self._caller_is_asset_protection_role() {
             return Err("only asset protection role can freeze");
         }
-        let frozen_key = self._frozen_key(&address);
-        if self.storage_load_len(&frozen_key) > 0 {
+        if self.isFrozen(&address) {
             return Err("address already frozen");
         }
-        self.storage_store_i64(&frozen_key, 1);
+        self._set_frozen(&address, true);
 
         self.address_frozen_event(&address, ());
         Ok(())
@@ -439,11 +429,10 @@ pub trait BUSDCoin {
         if !self._caller_is_asset_protection_role() {
             return Err("only asset protection role can unfreeze");
         }
-        let frozen_key = self._frozen_key(&address);
-        if self.storage_load_len(&frozen_key) == 0 {
+        if !self.isFrozen(&address) {
             return Err("address already unfrozen");
         }
-        self.storage_store_i64(&frozen_key, 0);
+        self._set_frozen(&address, false);
 
         self.address_unfrozen_event(&address, ());
         Ok(())
@@ -465,14 +454,13 @@ pub trait BUSDCoin {
         }
 
         // erase balance
-        let balance_key = self._balance_key(&address);
-        let wiped_balance = self.storage_load_big_uint(&balance_key);
-        self.storage_store_i64(&balance_key, 0); // clear balance
+        let wiped_balance = self.balanceOf(&address);
+        self._set_balance(&address, &0.into()); // clear balance
         
         // decrease total supply
         let mut total_supply = self.totalSupply();
         total_supply -= &wiped_balance;
-        self._save_total_supply(&total_supply);
+        self._set_total_supply(&total_supply);
 
         // log operation
         self.frozen_address_wiped_event(&address, ());
@@ -489,18 +477,23 @@ pub trait BUSDCoin {
     /// * `address` The address to check if frozen.
     /// 
     #[view]
-    fn isFrozen(&self, address: &Address) -> bool {
-        let frozen_key = self._frozen_key(&address);
-        self.storage_load_len(&frozen_key) > 0
-    }
+    #[storage_get("frozen")]
+    fn isFrozen(&self, address: &Address) -> bool;
+
+    #[private]
+    #[storage_set("frozen")]
+    fn _set_frozen(&self, address: &Address, frozen: bool);
 
     // SUPPLY CONTROL FUNCTIONALITY
 
     /// Yields the currently proposed new owner, if any.
     #[view]
-    fn getSupplyController(&self) -> Address {
-        self.storage_load_bytes32(&SUPPLY_CONTROLLER_KEY.into()).into()
-    }
+    #[storage_get("sc")]
+    fn getSupplyController(&self) -> Address;
+
+    #[private]
+    #[storage_set("sc")]
+    fn _set_supply_controller(&self, address: &Address);
 
     #[private]
     fn _caller_is_supply_controller(&self) -> bool {
@@ -524,9 +517,7 @@ pub trait BUSDCoin {
         let old_supply_controller = self.getSupplyController();
 
         // change supply controller
-        self.storage_store_bytes32(
-            &SUPPLY_CONTROLLER_KEY.into(),
-            &new_supply_controller.as_fixed_bytes());
+        self._set_supply_controller(&new_supply_controller);
 
         // log event
         self.supply_controller_set_event(
@@ -551,15 +542,14 @@ pub trait BUSDCoin {
         let supply_controller = self.get_caller();
 
         // increase supply controller balance
-        let balance_key = self._balance_key(&supply_controller);
-        let mut supply_contr_balance = self.storage_load_big_uint(&balance_key);
+        let mut supply_contr_balance = self.balanceOf(&supply_controller);
         supply_contr_balance += &amount;
-        self.storage_store_big_uint(&balance_key, &supply_contr_balance);
+        self._set_balance(&supply_controller, &supply_contr_balance);
 
         // increase total supply
         let mut total_supply = self.totalSupply();
         total_supply += &amount;
-        self._save_total_supply(&total_supply);
+        self._set_total_supply(&total_supply);
 
         // log operation
         self.supply_increased_event(&supply_controller, &amount);
@@ -581,8 +571,7 @@ pub trait BUSDCoin {
         let supply_controller = self.get_caller();
 
         // get supply controller balance
-        let balance_key = self._balance_key(&supply_controller);
-        let mut supply_contr_balance = self.storage_load_big_uint(&balance_key);
+        let mut supply_contr_balance = self.balanceOf(&supply_controller);
 
         // check
         if amount > supply_contr_balance {
@@ -591,12 +580,12 @@ pub trait BUSDCoin {
 
         // decrease supply controller balance
         supply_contr_balance -= &amount;
-        self.storage_store_big_uint(&balance_key, &supply_contr_balance);
+        self._set_balance(&supply_controller, &supply_contr_balance);
 
         // decrease total supply
         let mut total_supply = self.totalSupply();
         total_supply -= &amount;
-        self._save_total_supply(&total_supply);
+        self._set_total_supply(&total_supply);
 
         // log operation
         self.supply_decreased_event(&supply_controller, &amount);
@@ -604,30 +593,6 @@ pub trait BUSDCoin {
 
         Ok(())
     }
-
-    // STORAGE KEYS
-
-    /// generates the balance key that maps balances with their owners
-    #[private]
-    fn _balance_key(&self, address: &Address) -> StorageKey {
-        // this compresses the raw key down to 32 bytes
-        self.keccak256(&balance_key_raw(address)).into()
-    }
-
-    /// generates the allowance key that maps allowances with the respective sender-receiver pairs
-    #[private]
-    fn _allowance_key(&self, from: &Address, to: &Address) -> StorageKey {
-        // this compresses the raw key down to 32 bytes
-        self.keccak256(&allowance_key_raw(from, to)).into()
-    }
-
-    /// generates the frozen key in the map that indicates whether an account is frozen 
-    #[private]
-    fn _frozen_key(&self, address: &Address) -> StorageKey {
-        // this compresses the raw key down to 32 bytes
-        self.keccak256(&frozen_key_raw(address)).into()
-    }
-
 
     // ERC20 BASIC EVENTS
     
