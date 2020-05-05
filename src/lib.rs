@@ -300,7 +300,7 @@ pub trait BUSDCoin {
         let contract_balance = self.balanceOf(&contract_address);
 
         // clear contract own balance
-        self._set_balance(&contract_address, &0.into());
+        self._set_balance(&contract_address, &BigUint::zero());
 
         // increment owner balance
         let mut owner_balance = self.balanceOf(&caller);
@@ -452,7 +452,7 @@ pub trait BUSDCoin {
 
         // erase balance
         let wiped_balance = self.balanceOf(&address);
-        self._set_balance(&address, &0.into()); // clear balance
+        self._set_balance(&address, &BigUint::from(1u32)); // clear balance
         
         // decrease total supply
         let mut total_supply = self.totalSupply();
