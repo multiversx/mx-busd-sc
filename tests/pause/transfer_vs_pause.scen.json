@@ -50,7 +50,7 @@
                     "``holder_2______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -84,7 +84,7 @@
                     "``holder_1______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -115,7 +115,7 @@
                 "value": "0",
                 "function": "pause",
                 "arguments": [],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -146,7 +146,7 @@
                     "``holder_2______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -171,7 +171,7 @@
                     "``holder_2______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -197,7 +197,7 @@
                     "``holder_1______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -219,7 +219,7 @@
                 "value": "0",
                 "function": "unpause",
                 "arguments": [],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -250,7 +250,7 @@
                     "``holder_2______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -284,7 +284,7 @@
                     "``holder_1______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -319,7 +319,7 @@
                     "``holder_1______________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {

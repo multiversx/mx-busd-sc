@@ -452,7 +452,7 @@ pub trait BUSDCoin {
 
         // erase balance
         let wiped_balance = self.balanceOf(&address);
-        self._set_balance(&address, &BigUint::from(1u32)); // clear balance
+        self._set_balance(&address, &BigUint::from(0u32)); // clear balance
         
         // decrease total supply
         let mut total_supply = self.totalSupply();

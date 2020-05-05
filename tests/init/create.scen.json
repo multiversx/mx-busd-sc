@@ -30,7 +30,7 @@
                 "function": "",
                 "contractCode": "file:../../output/busd.wasm",
                 "arguments": [],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -45,8 +45,8 @@
             "step": "checkState",
             "accounts": {
                 "``busd_owner____________________s1": {
-                    "nonce": "1",
-                    "balance": "99,999,900,000",
+                    "nonce": "*",
+                    "balance": "*",
                     "storage": {},
                     "code": ""
                 },
@@ -75,7 +75,7 @@
                 "arguments": [
                     "``busd_owner____________________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "100,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -88,14 +88,14 @@
         },
         {
             "step": "scCall",
-            "txId": "2",
+            "txId": "name",
             "tx": {
                 "from": "``busd_owner____________________s1",
                 "to": "``new_busd_contract_____________s1",
                 "value": "0",
                 "function": "name",
                 "arguments": [],
-                "gasLimit": "100,000",
+                "gasLimit": "100,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -108,14 +108,14 @@
         },
         {
             "step": "scCall",
-            "txId": "2",
+            "txId": "symbol",
             "tx": {
                 "from": "``busd_owner____________________s1",
                 "to": "``new_busd_contract_____________s1",
                 "value": "0",
                 "function": "symbol",
                 "arguments": [],
-                "gasLimit": "100,000",
+                "gasLimit": "100,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -128,14 +128,14 @@
         },
         {
             "step": "scCall",
-            "txId": "2",
+            "txId": "decimals",
             "tx": {
                 "from": "``busd_owner____________________s1",
                 "to": "``new_busd_contract_____________s1",
                 "value": "0",
                 "function": "decimals",
                 "arguments": [],
-                "gasLimit": "100,000",
+                "gasLimit": "100,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {

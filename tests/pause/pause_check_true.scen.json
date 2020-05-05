@@ -1,0 +1,61 @@
+{
+    "name": "pause test",
+    "steps": [
+        {
+            "step": "setState",
+            "accounts": {
+                "``busd_owner____________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_1______________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``holder_2______________________s1": {
+                    "nonce": "0",
+                    "balance": "100,000,000,000",
+                    "storage": {},
+                    "code": ""
+                },
+                "``busd_contract_________________s1": {
+                    "nonce": "0",
+                    "balance": "0",
+                    "storage": {
+                        "``own": "``busd_owner____________________s1",
+                        "``paused": "false",
+                        "``sc": "``busd_owner____________________s1",
+
+                        "``bal|``holder_1______________________s1": "500"
+                        
+                    },
+                    "code": "file:../../output/busd.wasm"
+                }
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "1",
+            "tx": {
+                "from": "``holder_1______________________s1",
+                "to": "``busd_contract_________________s1",
+                "value": "0",
+                "function": "isPaused",
+                "arguments": [],
+                "gasLimit": "100,000",
+                "gasPrice": "0x01"
+            },
+            "expect": {
+                "out": [ "false" ],
+                "status": "",
+                "logs": [],
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}

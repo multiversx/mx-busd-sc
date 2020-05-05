@@ -67,7 +67,7 @@
                 "arguments": [
                     "``holder_gets_wiped_____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -99,7 +99,7 @@
                 "arguments": [
                     "``holder_gets_wiped_____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -122,7 +122,7 @@
                 "arguments": [
                     "``holder_gets_wiped_____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -171,7 +171,7 @@
                 "arguments": [
                     "``holder_gets_wiped_____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {

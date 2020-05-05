@@ -68,7 +68,7 @@
                     "``holder_gets_frozen____________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -102,7 +102,7 @@
                     "``holder_no_freeze______________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -136,7 +136,7 @@
                     "``holder_gets_frozen____________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -169,7 +169,7 @@
                 "arguments": [
                     "``holder_gets_frozen____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -201,7 +201,7 @@
                 "arguments": [
                     "``holder_gets_frozen____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -226,7 +226,7 @@
                     "``holder_no_freeze______________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -251,7 +251,7 @@
                     "``holder_gets_frozen____________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -276,7 +276,7 @@
                     "``holder_no_freeze______________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -301,7 +301,7 @@
                     "``holder_gets_frozen____________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -327,7 +327,7 @@
                     "``holder_no_freeze______________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -353,7 +353,7 @@
                     "``holder_gets_frozen____________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -379,7 +379,7 @@
                     "``another_holder________________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -403,7 +403,7 @@
                 "arguments": [
                     "``holder_gets_frozen____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -435,7 +435,7 @@
                 "arguments": [
                     "``holder_gets_frozen____________s1"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -460,7 +460,7 @@
                     "``holder_gets_frozen____________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -494,7 +494,7 @@
                     "``holder_no_freeze______________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
@@ -529,7 +529,7 @@
                     "``holder_no_freeze______________s1",
                     "10"
                 ],
-                "gasLimit": "100,000",
+                "gasLimit": "1,000,000",
                 "gasPrice": "0x01"
             },
             "expect": {
