@@ -14,8 +14,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``bal|``account_1_____________________s1": "0x2710",
-                        "keccak256:``ts": "0x2710"
+                        "``bal|``account_1_____________________s1": "0x2710",
+                        "``ts": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -30,7 +30,7 @@
                 "value": "0",
                 "function": "allowance",
                 "arguments": [
-                    "keccak256:``sc",
+                    "``account_other_________________s1",
                     "``account_1_____________________s1"
                 ],
                 "gasLimit": "0x100000",

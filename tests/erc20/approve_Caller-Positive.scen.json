@@ -14,8 +14,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``bal|``account_1_____________________s1": "0x2710",
-                        "keccak256:``ts": "0x2710"
+                        "``bal|``account_1_____________________s1": "0x2710",
+                        "``ts": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -67,9 +67,9 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``bal|``account_1_____________________s1": "0x2710",
-                        "keccak256:``alw|``account_1_____________________s1|``account_1_____________________s1": "0x25",
-                        "keccak256:``ts": "0x2710"
+                        "``bal|``account_1_____________________s1": "0x2710",
+                        "``alw|``account_1_____________________s1|``account_1_____________________s1": "0x25",
+                        "``ts": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

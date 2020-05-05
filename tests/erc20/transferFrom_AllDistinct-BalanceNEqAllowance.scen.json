@@ -14,9 +14,9 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``alw|``coin_holder_1_________________sx|``account_1_____________________s1": "0x28",
-                        "keccak256:``bal|``coin_holder_1_________________sx": "0x2710",
-                        "keccak256:``ts": "0x2710"
+                        "``alw|``coin_holder_1_________________sx|``account_1_____________________s1": "0x28",
+                        "``bal|``coin_holder_1_________________sx": "0x2710",
+                        "``ts": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -69,10 +69,10 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``alw|``coin_holder_1_________________sx|``account_1_____________________s1": "0x11",
-                        "keccak256:``bal|``coin_holder_1_________________sx": "0x26f9",
-                        "keccak256:``bal|``coin_holder_2_________________sx": "0x17",
-                        "keccak256:``ts": "0x2710"
+                        "``alw|``coin_holder_1_________________sx|``account_1_____________________s1": "0x11",
+                        "``bal|``coin_holder_1_________________sx": "0x26f9",
+                        "``bal|``coin_holder_2_________________sx": "0x17",
+                        "``ts": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

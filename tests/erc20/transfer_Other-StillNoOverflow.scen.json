@@ -14,9 +14,9 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``bal|``account_1_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                        "keccak256:``bal|``account_2_____________________s1": "0x0a",
-                        "keccak256:``ts": "0x010000000000000000000000000000000000000000000000000000000000000009"
+                        "``bal|``account_1_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "``bal|``account_2_____________________s1": "0x0a",
+                        "``ts": "0x010000000000000000000000000000000000000000000000000000000000000009"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -68,9 +68,9 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``bal|``account_1_____________________s1": "0x0a",
-                        "keccak256:``bal|``account_2_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                        "keccak256:``ts": "0x010000000000000000000000000000000000000000000000000000000000000009"
+                        "``bal|``account_1_____________________s1": "0x0a",
+                        "``bal|``account_2_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "``ts": "0x010000000000000000000000000000000000000000000000000000000000000009"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

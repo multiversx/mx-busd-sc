@@ -14,8 +14,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``bal|``account_1_____________________s1": "0x2710",
-                        "keccak256:``ts": "0x2710"
+                        "``bal|``account_1_____________________s1": "0x2710",
+                        "``ts": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -30,7 +30,7 @@
                 "value": "0",
                 "function": "approve",
                 "arguments": [
-                    "keccak256:``sc",
+                    "``account_2_____________________s1",
                     "0x2a"
                 ],
                 "gasLimit": "0x100000",
@@ -45,7 +45,7 @@
                         "identifier": "0x0000000000000000000000000000000000000000000000000000000000000002",
                         "topics": [
                             "``account_1_____________________s1",
-                            "keccak256:``sc"
+                            "``account_2_____________________s1"
                         ],
                         "data": "0x2a"
                     }
@@ -67,9 +67,9 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``bal|``account_1_____________________s1": "0x2710",
-                        "keccak256:``alw|``account_1_____________________s1|keccak256:``sc": "0x2a",
-                        "keccak256:``ts": "0x2710"
+                        "``bal|``account_1_____________________s1": "0x2710",
+                        "``alw|``account_1_____________________s1|``account_2_____________________s1": "0x2a",
+                        "``ts": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

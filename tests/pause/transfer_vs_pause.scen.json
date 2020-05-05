@@ -26,11 +26,11 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``own": "``busd_owner____________________s1",
-                        "keccak256:``paused": "false",
-                        "keccak256:``sc": "``busd_owner____________________s1",
+                        "``own": "``busd_owner____________________s1",
+                        "``paused": "false",
+                        "``sc": "``busd_owner____________________s1",
 
-                        "keccak256:``bal|``holder_1______________________s1": "500"
+                        "``bal|``holder_1______________________s1": "500"
                         
                     },
                     "code": "file:../../output/busd.wasm"

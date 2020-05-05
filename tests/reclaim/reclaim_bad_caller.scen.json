@@ -20,12 +20,12 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``ts": "12345000",
-                        "keccak256:``own": "``busd_owner____________________s1",
-                        "keccak256:``paused": "false",
-                        "keccak256:``sc": "``busd_owner____________________s1",
+                        "``ts": "12345000",
+                        "``own": "``busd_owner____________________s1",
+                        "``paused": "false",
+                        "``sc": "``busd_owner____________________s1",
 
-                        "keccak256:``bal|``someone_else__________________s1": "12345000"
+                        "``bal|``someone_else__________________s1": "12345000"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

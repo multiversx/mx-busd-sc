@@ -38,16 +38,17 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``own": "``busd_owner____________________s1",
-                        "keccak256:``paused": "false",
-                        "keccak256:``apr": "1|``asset_protection_role_________s1",
-                        "keccak256:``sc": "``busd_owner____________________s1",
+                        "``own": "``busd_owner____________________s1",
+                        "``paused": "false",
+                        "``apr": "1|``asset_protection_role_________s1",
+                        "``sc": "``busd_owner____________________s1",
+                        "``prop": "0x00",
 
-                        "keccak256:``bal|``holder_gets_frozen____________s1": "500",
-                        "keccak256:``bal|``holder_no_freeze______________s1": "500",
+                        "``bal|``holder_gets_frozen____________s1": "500",
+                        "``bal|``holder_no_freeze______________s1": "500",
 
-                        "keccak256:``alw|``holder_no_freeze______________s1|``another_holder________________s1": "1000",
-                        "keccak256:``alw|``holder_gets_frozen____________s1|``another_holder________________s1": "1000"
+                        "``alw|``holder_no_freeze______________s1|``another_holder________________s1": "1000",
+                        "``alw|``holder_gets_frozen____________s1|``another_holder________________s1": "1000"
                         
                     },
                     "code": "file:../../output/busd.wasm"

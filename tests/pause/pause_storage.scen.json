@@ -54,11 +54,11 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``own": "``busd_owner____________________s1",
-                        "keccak256:``paused": "true",
-                        "keccak256:``sc": "``busd_owner____________________s1",
-                        "keccak256:``apr": "0x00",
-                        "keccak256:``prop": "0x00"
+                        "``own": "``busd_owner____________________s1",
+                        "``paused": "true",
+                        "``sc": "``busd_owner____________________s1",
+                        "``apr": "0x00",
+                        "``prop": "0x00"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -127,11 +127,11 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``own": "``busd_owner____________________s1",
-                        "keccak256:``paused": "false",
-                        "keccak256:``sc": "``busd_owner____________________s1",
-                        "keccak256:``apr": "0x00",
-                        "keccak256:``prop": "0x00"
+                        "``own": "``busd_owner____________________s1",
+                        "``paused": "false",
+                        "``sc": "``busd_owner____________________s1",
+                        "``apr": "0x00",
+                        "``prop": "0x00"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -199,11 +199,11 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "keccak256:``own": "``busd_owner____________________s1",
-                        "keccak256:``paused": "true",
-                        "keccak256:``sc": "``busd_owner____________________s1",
-                        "keccak256:``apr": "0x00",
-                        "keccak256:``prop": "0x00"
+                        "``own": "``busd_owner____________________s1",
+                        "``paused": "true",
+                        "``sc": "``busd_owner____________________s1",
+                        "``apr": "0x00",
+                        "``prop": "0x00"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
