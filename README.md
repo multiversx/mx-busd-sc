@@ -35,5 +35,9 @@ erdpy --verbose test --directory="tests/init/create.scen.json"
 
 ## Deploy
 
-Follow instructions in https://github.com/ElrondNetwork/erdpy/blob/master/README.md
+```
+erdpy --verbose deploy . --pem="./alice.pem" --proxy="https://wallet-api.elrond.com"
+erdpy --verbose query erd1qqqqqqqqqqqqqpgq9sp6f9m9zzhepfl0e02cy9m9tnztry2kx2fsf96449 --function="name" --proxy="https://wallet-api.elrond.com"
+
+```
 
