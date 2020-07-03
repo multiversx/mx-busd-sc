@@ -42,7 +42,7 @@
                         "``paused": "false",
                         "``apr": "1|``asset_protection_role_________s1",
                         "``sc": "``busd_owner____________________s1",
-                        "``prop": "0x00",
+                        "``prop": "",
 
                         "``bal|``holder_gets_frozen____________s1": "500",
                         "``bal|``holder_no_freeze______________s1": "500",

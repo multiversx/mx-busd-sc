@@ -57,8 +57,8 @@
                         "``own": "``busd_owner____________________s1",
                         "``paused": "true",
                         "``sc": "``busd_owner____________________s1",
-                        "``apr": "0x00",
-                        "``prop": "0x00"
+                        "``apr": "",
+                        "``prop": ""
                     },
                     "code": "file:../../output/busd.wasm"
                 }

@@ -4,6 +4,8 @@
 #![allow(non_snake_case)]
 #![allow(unused_attributes)]
 
+imports!();
+
 const NAME:     &[u8]    = b"Binance USD";
 const SYMBOL:   &[u8]    = b"BUSD";
 const DECIMALS: usize    = 18;
@@ -14,13 +16,13 @@ pub trait BUSDCoin {
     // STATIC INFO
 
     #[view]
-    fn name(&self) -> Vec<u8> {
-        NAME.to_vec()
+    fn name(&self) -> &'static [u8] {
+        NAME
     }
 
     #[view]
-    fn symbol(&self) -> Vec<u8> {
-        SYMBOL.to_vec()
+    fn symbol(&self) -> &'static [u8] {
+        SYMBOL
     }
 
     #[view]
@@ -32,6 +34,7 @@ pub trait BUSDCoin {
 
     /// constructor function
     /// is called immediately after the contract is created
+    #[init]
     fn init(&self) {
         // owner will be deploy caller
         let owner = self.get_caller();
@@ -41,7 +44,7 @@ pub trait BUSDCoin {
         self._set_supply_controller(&owner);
         
         self._set_asset_protection_role(None);
-        self._set_proposed_owner(None);
+        self.set_proposed_owner(None);
     
         // the contract starts paused
         self._set_paused(true);
@@ -54,11 +57,9 @@ pub trait BUSDCoin {
     #[storage_get("ts")]
     fn totalSupply(&self) -> BigUint;
 
-    #[private]
     #[storage_set("ts")]
     fn _set_total_supply(&self, total_supply: &BigUint);
 
-    #[private]
     fn _perform_transfer(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {        
         // load sender balance
         let mut sender_balance = self.balanceOf(&sender);
@@ -89,6 +90,7 @@ pub trait BUSDCoin {
     /// 
     /// * `to` The address to transfer to.
     /// 
+    #[endpoint]
     fn transfer(&self, to: Address, amount: BigUint) -> Result<(), &str> {
         if self.isPaused() {
             return Err("paused");
@@ -114,7 +116,6 @@ pub trait BUSDCoin {
     #[storage_get("bal")]
     fn balanceOf(&self, address: &Address) -> BigUint;
 
-    #[private]
     #[storage_set("bal")]
     fn _set_balance(&self, address: &Address, balance: &BigUint);
 
@@ -128,6 +129,7 @@ pub trait BUSDCoin {
     /// * `recipient` The address to transfer to.
     /// * `amount` the amount of tokens to be transferred.
     /// 
+    #[endpoint]
     fn transferFrom(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {
         if self.isPaused() {
             return Err("paused");
@@ -164,6 +166,7 @@ pub trait BUSDCoin {
     /// * `spender` The address that will spend the funds.
     /// * `amount` The amount of tokens to be spent.
     /// 
+    #[endpoint]
     fn approve(&self, spender: Address, amount: BigUint) -> Result<(), &str> {
         if self.isPaused() {
             return Err("paused");
@@ -195,7 +198,6 @@ pub trait BUSDCoin {
     #[storage_get("alw")]
     fn allowance(&self, owner: &Address, spender: &Address) -> BigUint;
 
-    #[private]
     #[storage_set("alw")]
     fn _set_allowance(&self, owner: &Address, spender: &Address, allowance: &BigUint);
 
@@ -206,18 +208,20 @@ pub trait BUSDCoin {
     #[storage_get("own")]
     fn getContractOwner(&self) -> Address;
 
-    #[private]
     #[storage_set("own")]
     fn _set_contract_owner(&self, owner: &Address);
 
-    /// Yields the currently proposed new owner, if any.
-    #[view]
     #[storage_get("prop")]
-    fn getProposedOwner(&self) -> Option<Address>;
+    fn get_proposed_owner(&self) -> Option<Address>;
 
-    #[private]
+    /// Yields the currently proposed new owner, if any.
+    #[view(getProposedOwner)]
+    fn get_proposed_owner_public(&self) -> OptionalResult<Address> {
+        self.get_proposed_owner().into()
+    }
+
     #[storage_set("prop")]
-    fn _set_proposed_owner(&self, proposed_owner: Option<&Address>);
+    fn set_proposed_owner(&self, proposed_owner: Option<&Address>);
 
     /// Allows the current owner to begin transferring control of the contract to a proposedOwner
     /// 
@@ -225,7 +229,8 @@ pub trait BUSDCoin {
     /// 
     /// * `proposed_owner` The address to transfer ownership to.
     /// 
-    fn proposeOwner(&self, proposed_owner: Address) -> Result<(), &str> {
+    #[endpoint(proposeOwner)]
+    fn propose_owner(&self, proposed_owner: Address) -> Result<(), &str> {
         let caller = self.get_caller();
         if caller != self.getContractOwner() {
             return Err("only owner can propose another owner");
@@ -233,13 +238,13 @@ pub trait BUSDCoin {
         if caller == proposed_owner {
             return Err("current owner cannot propose itself");
         }
-        if let Some(previous_proposed_owner) = self.getProposedOwner() {
+        if let Some(previous_proposed_owner) = self.get_proposed_owner() {
             if proposed_owner == previous_proposed_owner {
                 return Err("caller already is proposed owner"); 
             }
         }
 
-        self._set_proposed_owner(Some(&proposed_owner));
+        self.set_proposed_owner(Some(&proposed_owner));
 
         // event
         self.ownership_transfer_proposed_event(&caller, &proposed_owner, ());
@@ -247,15 +252,16 @@ pub trait BUSDCoin {
     }
 
     /// Allows the current owner or proposed owner to cancel transferring control of the contract to the proposed owner.
+    #[endpoint]
     fn disregardProposedOwner() -> Result<(), &str> {
-        match self.getProposedOwner() {
+        match self.get_proposed_owner() {
             None => Err("can only disregard a proposed owner that was previously set"),
             Some(proposed_owner) => {
                 let caller = self.get_caller();
                 if caller != self.getContractOwner() && caller != proposed_owner {
                     return Err("only proposedOwner or owner can disregard proposed owner"); 
                 }
-                self._set_proposed_owner(None);
+                self.set_proposed_owner(None);
 
                 self.ownership_transfer_disregarded_event(&proposed_owner, ());
                 Ok(())
@@ -264,8 +270,9 @@ pub trait BUSDCoin {
     }
 
     /// Allows the proposed owner to complete transferring control of the contract to herself..
+    #[endpoint]
     fn claimOwnership() -> Result<(), &str> {
-        match self.getProposedOwner() {
+        match self.get_proposed_owner() {
             None => Err("no owner proposed"),
             Some(proposed_owner) => {
                 let caller = self.get_caller();
@@ -278,7 +285,7 @@ pub trait BUSDCoin {
                 // set new owner
                 self._set_contract_owner(&proposed_owner);
                 // clear proposed owner
-                self._set_proposed_owner(None);
+                self.set_proposed_owner(None);
 
                 self.ownership_transferred_event(&old_owner, &proposed_owner, ());
                 Ok(())  
@@ -289,6 +296,7 @@ pub trait BUSDCoin {
     /// Reclaim all BUSD at the contract address.
     /// This sends all the BUSD tokens that the address of the contract itself is holding to the owner.
     /// Note: this is not affected by freeze constraints.
+    #[endpoint]
     fn reclaimBUSD() -> Result<(), &str> {
         let caller = self.get_caller();
         if caller != self.getContractOwner() {
@@ -296,7 +304,7 @@ pub trait BUSDCoin {
         }
 
         // load contract own balance
-        let contract_address = self.get_own_address();
+        let contract_address = self.get_sc_address();
         let contract_balance = self.balanceOf(&contract_address);
 
         // clear contract own balance
@@ -319,11 +327,11 @@ pub trait BUSDCoin {
     #[storage_get("paused")]
     fn isPaused(&self) -> bool;
 
-    #[private]
     #[storage_set("paused")]
     fn _set_paused(&self, paused: bool);
 
     /// Called by the owner to pause, triggers stopped state
+    #[endpoint]
     fn pause(&self) -> Result<(), &str> {
         if self.isPaused() {
             return Err("already paused")
@@ -335,6 +343,7 @@ pub trait BUSDCoin {
     }
 
     /// Called by the owner to unpause, returns to normal state
+    #[endpoint]
     fn unpause(&self) -> Result<(), &str> {
         if !self.isPaused() {
             return Err("already unpaused")
@@ -347,18 +356,20 @@ pub trait BUSDCoin {
 
     // ASSET PROTECTION FUNCTIONALITY
 
-    /// Yields the currently proposed new owner, if any.
-    #[view]
     #[storage_get("apr")]
-    fn getAssetProtectionRole(&self) -> Option<Address>;
+    fn get_asset_protection_role(&self) -> Option<Address>;
 
-    #[private]
     #[storage_set("apr")]
     fn _set_asset_protection_role(&self, apr: Option<&Address>);
 
-    #[private]
+    /// Yields the current asset protection role, if any.
+    #[view(getAssetProtectionRole)]
+    fn get_asset_protection_role_public(&self) -> OptionalResult<Address> {
+        self.get_asset_protection_role().into()
+    }
+
     fn _caller_is_asset_protection_role(&self) -> bool {
-        if let Some(asset_prot_role) = self.getAssetProtectionRole() {
+        if let Some(asset_prot_role) = self.get_asset_protection_role() {
             if self.get_caller() == asset_prot_role {
                 return true;
             }
@@ -372,6 +383,7 @@ pub trait BUSDCoin {
     /// 
     /// * `new_asset_prot_role` The new address allowed to freeze/unfreeze addresses and seize their tokens.
     /// 
+    #[endpoint]
     fn setAssetProtectionRole(&self, new_asset_prot_role: &Address) -> Result<(), &str> {
         let caller = self.get_caller();
         if caller != self.getContractOwner() && 
@@ -381,8 +393,8 @@ pub trait BUSDCoin {
 
         // needed for logging
         let old_asset_protection_role = self
-            .getAssetProtectionRole()
-            .unwrap_or_else(|| Address::from([0u8; 32]));
+            .get_asset_protection_role()
+            .unwrap_or_else(|| Address::zero());
 
         // change asset protection role
         self._set_asset_protection_role(Some(new_asset_prot_role));
@@ -403,6 +415,7 @@ pub trait BUSDCoin {
     /// 
     /// * `address` The address to freeze.
     /// 
+    #[endpoint]
     fn freeze(&self, address: &Address) -> Result<(), &str> {
         if !self._caller_is_asset_protection_role() {
             return Err("only asset protection role can freeze");
@@ -422,6 +435,7 @@ pub trait BUSDCoin {
     /// 
     /// * `address` The address to unfreeze.
     /// 
+    #[endpoint]
     fn unfreeze(&self, address: &Address) -> Result<(), &str> {
         if !self._caller_is_asset_protection_role() {
             return Err("only asset protection role can unfreeze");
@@ -442,6 +456,7 @@ pub trait BUSDCoin {
     /// 
     /// * `address` The address to wipe.
     /// 
+    #[endpoint]
     fn wipeFrozenAddress(&self, address: &Address) -> Result<(), &str> {
         if !self._caller_is_asset_protection_role() {
             return Err("only asset protection role can wipe");
@@ -477,7 +492,6 @@ pub trait BUSDCoin {
     #[storage_get("frozen")]
     fn isFrozen(&self, address: &Address) -> bool;
 
-    #[private]
     #[storage_set("frozen")]
     fn _set_frozen(&self, address: &Address, frozen: bool);
 
@@ -488,11 +502,9 @@ pub trait BUSDCoin {
     #[storage_get("sc")]
     fn getSupplyController(&self) -> Address;
 
-    #[private]
     #[storage_set("sc")]
     fn _set_supply_controller(&self, address: &Address);
 
-    #[private]
     fn _caller_is_supply_controller(&self) -> bool {
         return self.get_caller() == self.getSupplyController()
     }
@@ -503,6 +515,7 @@ pub trait BUSDCoin {
     /// 
     /// * `new_supply_controller` The address allowed to burn/mint tokens to control supply.
     /// 
+    #[endpoint]
     fn setSupplyController(&self, new_supply_controller: &Address) -> Result<(), &str> {
         let caller = self.get_caller();
         if caller != self.getContractOwner() && 
@@ -532,6 +545,7 @@ pub trait BUSDCoin {
     /// 
     /// * `amount` The number of tokens to add.
     /// 
+    #[endpoint]
     fn increaseSupply(&self, amount: BigUint) -> Result<(), &str> {
         if !self._caller_is_supply_controller() {
             return Err("only supply controller can increase supply");
@@ -561,6 +575,7 @@ pub trait BUSDCoin {
     /// 
     /// * `amount` The number of tokens to remove.
     /// 
+    #[endpoint]
     fn decreaseSupply(&self, amount: BigUint) -> Result<(), &str> {
         if !self._caller_is_supply_controller() {
             return Err("only supply controller can decrease supply");
