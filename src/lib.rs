@@ -54,29 +54,25 @@ pub trait BUSDCoin {
 
     /// Total number of tokens in existence.
     #[view(totalSupply)]
-    #[storage_get("ts")]
-    fn get_total_supply(&self) -> BigUint;
-
-    #[storage_set("ts")]
-    fn set_total_supply(&self, total_supply: &BigUint);
+    #[storage_get_mut("ts")]
+    fn get_mut_total_supply(&self) -> mut_storage!(BigUint);
 
     fn perform_transfer(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {        
-        // load sender balance
-        let mut sender_balance = self.balance_of(&sender);
-    
-        // check if enough funds
-        if &amount > &sender_balance {
-            return Err("insufficient funds");
+        // check if enough funds & decrease sender balance
+        {
+            let mut sender_balance = self.get_mut_balance(&sender);
+            if &amount > &*sender_balance {
+                return Err("insufficient funds");
+            }
+            
+            *sender_balance -= &amount; // saved automatically at the end of scope
         }
-    
-        // decrease & set sender balance
-        sender_balance -= &amount;
-        self.set_balance(&sender, &sender_balance);
-    
-        // load, increase & set receiver balance
-        let mut rec_balance = self.balance_of(&recipient);
-        rec_balance += &amount;
-        self.set_balance(&recipient, &rec_balance);
+
+        // increase recipient balance
+        {
+            let mut recipient_balance = self.get_mut_balance(&recipient);
+            *recipient_balance += &amount; // saved automatically at the end of scope
+        }
     
         // log operation
         self.transfer_event(&sender, &recipient, &amount);
@@ -119,6 +115,9 @@ pub trait BUSDCoin {
     #[storage_set("bal")]
     fn set_balance(&self, address: &Address, balance: &BigUint);
 
+    #[storage_get_mut("bal")]
+    fn get_mut_balance(&self, address: &Address) -> mut_storage!(BigUint);
+
     // ERC20 FUNCTIONALITY
  
     /// Use allowance to transfer funds between two accounts.
@@ -143,16 +142,15 @@ pub trait BUSDCoin {
         }
 
         // load allowance
-        let mut allowance = self.allowance(&sender, &caller);
+        let mut allowance = self.get_mut_allowance(&sender, &caller);
 
         // amount should not exceed allowance
-        if &amount > &allowance {
+        if &amount > &*allowance {
             return Err("allowance exceeded");
         }
 
         // update allowance
-        allowance -= &amount;
-        self._set_allowance(&sender, &caller, &allowance);
+        *allowance -= &amount; // saved automatically at the end of scope
 
         // transfer
         self.perform_transfer(sender, recipient, amount)
@@ -180,7 +178,7 @@ pub trait BUSDCoin {
         }
 
         // store allowance
-        self._set_allowance(&caller, &spender, &amount);
+        self.set_allowance(&caller, &spender, &amount);
       
         // log operation
         self.approve_event(&caller, &spender, &amount);
@@ -194,12 +192,12 @@ pub trait BUSDCoin {
     /// * `owner` The address that owns the funds.
     /// * `spender` The address that will spend the funds.
     /// 
-    #[view]
-    #[storage_get("alw")]
-    fn allowance(&self, owner: &Address, spender: &Address) -> BigUint;
+    #[view(allowance)]
+    #[storage_get_mut("alw")]
+    fn get_mut_allowance(&self, owner: &Address, spender: &Address) -> mut_storage!(BigUint);
 
     #[storage_set("alw")]
-    fn _set_allowance(&self, owner: &Address, spender: &Address, allowance: &BigUint);
+    fn set_allowance(&self, owner: &Address, spender: &Address, allowance: &BigUint);
 
     // OWNER FUNCTIONALITY
 
@@ -305,18 +303,17 @@ pub trait BUSDCoin {
 
         // load contract own balance
         let contract_address = self.get_sc_address();
-        let contract_balance = self.balance_of(&contract_address);
-
-        // clear contract own balance
-        self.set_balance(&contract_address, &BigUint::zero());
+        let mut contract_balance = self.get_mut_balance(&contract_address);
 
         // increment owner balance
-        let mut owner_balance = self.balance_of(&caller);
-        owner_balance += &contract_balance;
-        self.set_balance(&caller, &owner_balance);
+        let mut owner_balance = self.get_mut_balance(&caller);
+        *owner_balance += &*contract_balance; // saved automatically at the end of scope
     
         // log operation
         self.transfer_event(&contract_address, &caller, &contract_balance);
+
+        // clear contract own balance
+        (*contract_balance) = BigUint::zero();
 
         Ok(())
     }
@@ -466,18 +463,19 @@ pub trait BUSDCoin {
         }
 
         // erase balance
-        let wiped_balance = self.balance_of(&address);
-        self.set_balance(&address, &BigUint::from(0u32)); // clear balance
-        
+        let mut balance_to_wipe = self.get_mut_balance(&address);
+
         // decrease total supply
-        let mut total_supply = self.get_total_supply();
-        total_supply -= &wiped_balance;
-        self.set_total_supply(&total_supply);
+        let mut total_supply = self.get_mut_total_supply();
+        *total_supply -= &*balance_to_wipe;
 
         // log operation
         self.frozen_address_wiped_event(&address, ());
-        self.supply_decreased_event(&address, &wiped_balance);
-        self.transfer_event(&address,  &[0u8; 32].into(), &wiped_balance);
+        self.supply_decreased_event(&address, &*balance_to_wipe);
+        self.transfer_event(&address,  &[0u8; 32].into(), &*balance_to_wipe);
+
+        // erase balance
+        *balance_to_wipe = BigUint::zero(); // saved automatically at the end of scope
 
         Ok(())
     }
@@ -553,14 +551,12 @@ pub trait BUSDCoin {
         let supply_controller = self.get_caller();
 
         // increase supply controller balance
-        let mut supply_contr_balance = self.balance_of(&supply_controller);
-        supply_contr_balance += &amount;
-        self.set_balance(&supply_controller, &supply_contr_balance);
+        let mut supply_contr_balance = self.get_mut_balance(&supply_controller);
+        *supply_contr_balance += &amount; // saved automatically at the end of scope
 
         // increase total supply
-        let mut total_supply = self.get_total_supply();
-        total_supply += &amount;
-        self.set_total_supply(&total_supply);
+        let mut total_supply = self.get_mut_total_supply();
+        *total_supply += &amount; // saved automatically at the end of scope
 
         // log operation
         self.supply_increased_event(&supply_controller, &amount);
@@ -595,9 +591,8 @@ pub trait BUSDCoin {
         self.set_balance(&supply_controller, &supply_contr_balance);
 
         // decrease total supply
-        let mut total_supply = self.get_total_supply();
-        total_supply -= &amount;
-        self.set_total_supply(&total_supply);
+        let mut total_supply = self.get_mut_total_supply();
+        *total_supply -= &amount; // saved automatically at the end of scope
 
         // log operation
         self.supply_decreased_event(&supply_controller, &amount);
