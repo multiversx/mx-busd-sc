@@ -503,7 +503,7 @@ pub trait BUSDCoin {
     #[storage_set("sc")]
     fn set_supply_controller(&self, address: &Address);
 
-    fn _caller_is_supply_controller(&self) -> bool {
+    fn caller_is_supply_controller(&self) -> bool {
         return self.get_caller() == self.get_supply_controller()
     }
 
@@ -517,7 +517,7 @@ pub trait BUSDCoin {
     fn set_supply_controller_endpoint(&self, new_supply_controller: &Address) -> Result<(), &str> {
         let caller = self.get_caller();
         if caller != self.get_contract_owner() && 
-           !self._caller_is_supply_controller() {
+           !self.caller_is_supply_controller() {
             return Err("only supply controller or owner can change supply controller")
         }
 
@@ -545,7 +545,7 @@ pub trait BUSDCoin {
     /// 
     #[endpoint(increaseSupply)]
     fn increase_supply(&self, amount: BigUint) -> Result<(), &str> {
-        if !self._caller_is_supply_controller() {
+        if !self.caller_is_supply_controller() {
             return Err("only supply controller can increase supply");
         }
         let supply_controller = self.get_caller();
@@ -573,7 +573,7 @@ pub trait BUSDCoin {
     /// 
     #[endpoint(decreaseSupply)]
     fn decrease_supply(&self, amount: BigUint) -> Result<(), &str> {
-        if !self._caller_is_supply_controller() {
+        if !self.caller_is_supply_controller() {
             return Err("only supply controller can decrease supply");
         }
         let supply_controller = self.get_caller();
