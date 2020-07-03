@@ -54,7 +54,7 @@ pub trait BUSDCoin {
 
     /// Total number of tokens in existence.
     #[view(totalSupply)]
-    #[storage_get_mut("ts")]
+    #[storage_get_mut("total_supply")]
     fn get_mut_total_supply(&self) -> mut_storage!(BigUint);
 
     fn perform_transfer(&self, sender: Address, recipient: Address, amount: BigUint) -> Result<(), &str> {        
@@ -109,13 +109,13 @@ pub trait BUSDCoin {
     /// * `address` The address to query the the balance of
     /// 
     #[view(balanceOf)]
-    #[storage_get("bal")]
+    #[storage_get("balance")]
     fn balance_of(&self, address: &Address) -> BigUint;
 
-    #[storage_set("bal")]
+    #[storage_set("balance")]
     fn set_balance(&self, address: &Address, balance: &BigUint);
 
-    #[storage_get_mut("bal")]
+    #[storage_get_mut("balance")]
     fn get_mut_balance(&self, address: &Address) -> mut_storage!(BigUint);
 
     // ERC20 FUNCTIONALITY
@@ -193,23 +193,23 @@ pub trait BUSDCoin {
     /// * `spender` The address that will spend the funds.
     /// 
     #[view(allowance)]
-    #[storage_get_mut("alw")]
+    #[storage_get_mut("allowance")]
     fn get_mut_allowance(&self, owner: &Address, spender: &Address) -> mut_storage!(BigUint);
 
-    #[storage_set("alw")]
+    #[storage_set("allowance")]
     fn set_allowance(&self, owner: &Address, spender: &Address, allowance: &BigUint);
 
     // OWNER FUNCTIONALITY
 
     /// Yields the current contract owner.
     #[view(getContractOwner)]
-    #[storage_get("own")]
+    #[storage_get("owner")]
     fn get_contract_owner(&self) -> Address;
 
-    #[storage_set("own")]
+    #[storage_set("owner")]
     fn set_contract_owner(&self, owner: &Address);
 
-    #[storage_get("prop")]
+    #[storage_get("prop_owner")]
     fn get_proposed_owner(&self) -> Option<Address>;
 
     /// Yields the currently proposed new owner, if any.
@@ -218,7 +218,7 @@ pub trait BUSDCoin {
         self.get_proposed_owner().into()
     }
 
-    #[storage_set("prop")]
+    #[storage_set("prop_owner")]
     fn set_proposed_owner(&self, proposed_owner: Option<&Address>);
 
     /// Allows the current owner to begin transferring control of the contract to a proposedOwner
@@ -353,11 +353,11 @@ pub trait BUSDCoin {
 
     // ASSET PROTECTION FUNCTIONALITY
 
-    #[storage_get("apr")]
+    #[storage_get("ap_role")]
     fn get_asset_protection_role(&self) -> Option<Address>;
 
-    #[storage_set("apr")]
-    fn set_asset_protection_role(&self, apr: Option<&Address>);
+    #[storage_set("ap_role")]
+    fn set_asset_protection_role(&self, ap_role: Option<&Address>);
 
     /// Yields the current asset protection role, if any.
     #[view(getAssetProtectionRole)]
@@ -497,10 +497,10 @@ pub trait BUSDCoin {
 
     /// Yields the currently proposed new owner, if any.
     #[view(getSupplyController)]
-    #[storage_get("sc")]
+    #[storage_get("supply_c")]
     fn get_supply_controller(&self) -> Address;
 
-    #[storage_set("sc")]
+    #[storage_set("supply_c")]
     fn set_supply_controller(&self, address: &Address);
 
     fn caller_is_supply_controller(&self) -> bool {

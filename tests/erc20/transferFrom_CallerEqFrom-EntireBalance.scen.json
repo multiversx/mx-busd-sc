@@ -14,9 +14,9 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``alw|``account_1_____________________s1|``account_1_____________________s1": "0x2710",
-                        "``bal|``account_1_____________________s1": "0x2710",
-                        "``ts": "0x2710"
+                        "``allowance|``account_1_____________________s1|``account_1_____________________s1": "0x2710",
+                        "``balance|``account_1_____________________s1": "0x2710",
+                        "``total_supply": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -69,8 +69,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``bal|``account_7_____________________sz": "0x2710",
-                        "``ts": "0x2710"
+                        "``balance|``account_7_____________________sz": "0x2710",
+                        "``total_supply": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

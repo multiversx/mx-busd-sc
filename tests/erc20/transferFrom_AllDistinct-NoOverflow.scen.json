@@ -14,10 +14,10 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``alw|``coin_holder_1_________________sx|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
-                        "``bal|``coin_holder_1_________________sx": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
-                        "``bal|``account_2_____________________s1": "0x0a",
-                        "``ts": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+                        "``allowance|``coin_holder_1_________________sx|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
+                        "``balance|``coin_holder_1_________________sx": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
+                        "``balance|``account_2_____________________s1": "0x0a",
+                        "``total_supply": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -70,8 +70,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``bal|``account_2_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                        "``ts": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+                        "``balance|``account_2_____________________s1": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "``total_supply": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

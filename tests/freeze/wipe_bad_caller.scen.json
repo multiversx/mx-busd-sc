@@ -38,17 +38,17 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``ts": "23,000",
-                        "``own": "``busd_owner____________________s1",
+                        "``total_supply": "23,000",
+                        "``owner": "``busd_owner____________________s1",
                         "``paused": "false",
-                        "``apr": "1|``asset_protection_role_________s1",
-                        "``sc": "``busd_owner____________________s1",
+                        "``ap_role": "1|``asset_protection_role_________s1",
+                        "``supply_c": "``busd_owner____________________s1",
 
-                        "``bal|``holder_gets_wiped_____________s1": "500",
-                        "``bal|``holder_no_freeze______________s1": "500",
+                        "``balance|``holder_gets_wiped_____________s1": "500",
+                        "``balance|``holder_no_freeze______________s1": "500",
 
-                        "``alw|``holder_no_freeze______________s1|``another_holder________________s1": "1000",
-                        "``alw|``holder_gets_wiped_____________s1|``another_holder________________s1": "1000"
+                        "``allowance|``holder_no_freeze______________s1|``another_holder________________s1": "1000",
+                        "``allowance|``holder_gets_wiped_____________s1|``another_holder________________s1": "1000"
                         
                     },
                     "code": "file:../../output/busd.wasm"

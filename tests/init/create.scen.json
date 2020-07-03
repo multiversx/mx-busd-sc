@@ -54,11 +54,11 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``own": "``busd_owner____________________s1",
+                        "``owner": "``busd_owner____________________s1",
                         "``paused": "true",
-                        "``sc": "``busd_owner____________________s1",
-                        "``apr": "",
-                        "``prop": ""
+                        "``supply_c": "``busd_owner____________________s1",
+                        "``ap_role": "",
+                        "``prop_owner": ""
                     },
                     "code": "file:../../output/busd.wasm"
                 }

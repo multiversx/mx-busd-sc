@@ -14,8 +14,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``bal|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
-                        "``ts": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5"
+                        "``balance|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
+                        "``total_supply": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
@@ -67,8 +67,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``bal|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
-                        "``ts": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5"
+                        "``balance|``account_1_____________________s1": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5",
+                        "``total_supply": "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff5"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

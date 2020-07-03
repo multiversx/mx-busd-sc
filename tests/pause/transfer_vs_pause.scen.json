@@ -26,11 +26,11 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``own": "``busd_owner____________________s1",
+                        "``owner": "``busd_owner____________________s1",
                         "``paused": "false",
-                        "``sc": "``busd_owner____________________s1",
+                        "``supply_c": "``busd_owner____________________s1",
 
-                        "``bal|``holder_1______________________s1": "500"
+                        "``balance|``holder_1______________________s1": "500"
                         
                     },
                     "code": "file:../../output/busd.wasm"

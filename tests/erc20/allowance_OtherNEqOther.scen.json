@@ -14,8 +14,8 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``bal|``account_1_____________________s1": "0x2710",
-                        "``ts": "0x2710"
+                        "``balance|``account_1_____________________s1": "0x2710",
+                        "``total_supply": "0x2710"
                     },
                     "code": "file:../../output/busd.wasm"
                 }

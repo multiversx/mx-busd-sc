@@ -20,12 +20,12 @@
                     "nonce": "0",
                     "balance": "0",
                     "storage": {
-                        "``ts": "12345000",
-                        "``own": "``busd_owner____________________s1",
+                        "``total_supply": "12345000",
+                        "``owner": "``busd_owner____________________s1",
                         "``paused": "false",
-                        "``sc": "``busd_owner____________________s1",
+                        "``supply_c": "``busd_owner____________________s1",
 
-                        "``bal|``someone_else__________________s1": "12345000"
+                        "``balance|``someone_else__________________s1": "12345000"
                     },
                     "code": "file:../../output/busd.wasm"
                 }
